@@ -13,10 +13,10 @@ import {
 const eventRouter = Router();
 eventRouter.get('/', getAllEvent);
 eventRouter.post('/', createEvent);
+eventRouter.get('/clear', clearAllData);
 eventRouter.get('/:id', checkValidId, showById);
 eventRouter.put('/:id', checkValidId, updateEvent);
 eventRouter.put('/join/:id', checkValidId, joinEvent);
 eventRouter.delete('/:id', checkValidId, deleteEvent);
-eventRouter.get('/clear', clearAllData);
 
 export default eventRouter;
