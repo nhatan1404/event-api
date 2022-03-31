@@ -39,7 +39,6 @@ eventRouter.post(
   createEvent,
 );
 
-eventRouter.get('/:id', checkValidId, showById);
 eventRouter.get(
   ':id/users',
   authMiddleware,
@@ -47,6 +46,8 @@ eventRouter.get(
   checkValidId,
   getListUserByEventId,
 );
+
+eventRouter.get('/:id', checkValidId, showById);
 eventRouter.put(
   '/:id',
   authMiddleware,
