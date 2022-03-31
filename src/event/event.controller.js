@@ -17,7 +17,7 @@ export const showById = async (req, res) => {
   const eventId = req.params.id;
 
   try {
-    const event = await userService.findById(eventId);
+    const event = await eventService.findById(eventId);
     if (!event) {
       return res.notFound({ message: `Event with ${eventId} does not exist` });
     }
