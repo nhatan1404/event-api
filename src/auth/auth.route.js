@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import passport from 'passport';
+import authMiddleware from '../common/middlewares/auth.middlware.js';
 import { handleLogin, handleRegister, getProfile } from './auth.controller.js';
 
+import passport from 'passport';
 const authRouter = Router();
 
 authRouter.post('/login', handleLogin);

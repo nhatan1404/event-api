@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import { config } from 'dotenv';
 import session from 'express-session';
+import cors from 'cors';
 import mongoose from 'mongoose';
 import homeRouter from './home/home.route.js';
 import authRouter from './auth/auth.route.js';
@@ -40,7 +41,8 @@ const main = () => {
       }),
     )
     .use(express.json())
-    .use(AllFilterExceptions);
+    .use(AllFilterExceptions)
+    .use(cors());
 
   passport.serializeUser(function (user, done) {
     done(null, user);
