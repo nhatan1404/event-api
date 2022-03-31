@@ -11,7 +11,7 @@ const multerOptions = {
   fileFilter: (req, file, cb) => {
     const allowExt = process.env.ALLOWED_EXT_IMAGE;
     if (allowExt) {
-      const ext = Array.from(allowExt);
+      const ext = ['jpg', 'png', 'jpeg', 'gif', 'webp'];
       const allowExt = ext.join('|');
       const regex = new RegExp(`(${allowExt})$`);
 

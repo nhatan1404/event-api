@@ -37,13 +37,20 @@ const main = () => {
     .use(passport.initialize())
     .use(passport.session())
     .use(express.json())
-    .use(bodyParser.json())
+    // .use(bodyParser.json())
     .use(
       bodyParser.urlencoded({
-        extended: true,
+        extended: false,
       }),
     )
     .use(AllFilterExceptions);
+
+  app.use(express.json());
+  app.use(
+    express.urlencoded({
+      extended: false,
+    }),
+  );
 
   passport.serializeUser(function (user, done) {
     done(null, user);

@@ -1,6 +1,8 @@
 import { EventService } from './event.service.js';
 import { UserService } from '../user/user.service.js';
 import sendMail from '../common/utils/sendMail.util.js';
+import uploadMiddleware from '../common/middlewares/upload.middleware.js';
+import { remove } from '../common/utils/file.util.js';
 
 const eventService = new EventService();
 const userService = new UserService();
@@ -72,6 +74,22 @@ export const showById = async (req, res) => {
 
 export const createEvent = async (req, res) => {
   try {
+    uploadMiddleware.single('image')(req, res, (err) => {
+      return res.error(err.message);
+    });
+
+    const image = req.file;
+    if (!req.body.image && !image) {
+      return res.error({
+        field: 'image',
+        message: 'Image is required',
+      });
+    }
+
+    if (image) {
+      req.body.image = image.path;
+    }
+
     const saveEvent = await eventService.store(req.body);
     return res.success(saveEvent);
   } catch (error) {
@@ -82,13 +100,39 @@ export const createEvent = async (req, res) => {
 
 export const updateEvent = async (req, res) => {
   const eventId = req.params.id;
+  let oldImage = '';
 
   try {
+    uploadMiddleware.single('image')(req, res, (err) => {
+      return res.error(err.message);
+    });
+
+    const image = req.file;
+    if (!req.body.image && !image) {
+      return res.error({
+        field: 'image',
+        message: 'Image is required',
+      });
+    }
+
+    if (image) {
+      const event = await eventService.findById(eventId);
+      oldImage = event.image;
+      req.body.image = image.path;
+    }
+
     const updateEvent = await eventService.update(eventId, req.body);
     return res.success(updateEvent);
   } catch (error) {
     console.log(error);
     return res.internal();
+  } finally {
+    (async () => {
+      const isLocalImg = await checkPathExists(oldImage);
+      if (isLocalImg) {
+        await remove(oldImage);
+      }
+    })();
   }
 };
 

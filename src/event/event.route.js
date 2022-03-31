@@ -29,6 +29,7 @@ eventRouter.get(
   checkValidId,
   getListEventByUserId,
 );
+
 eventRouter.post(
   '/',
   authMiddleware,
