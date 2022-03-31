@@ -19,7 +19,7 @@ const multerOptions = {
         cb(null, true);
       } else {
         cb(
-          new BadRequestException(
+          new Error(
             `Không hỗ trợ file định dạng ${extname(file.originalname)}`,
           ),
           false,
