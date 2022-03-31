@@ -8,6 +8,8 @@ import {
   updateEvent,
   joinEvent,
   clearAllData,
+  getListEventByUserId,
+  getListUserByEventId,
 } from './event.controller.js';
 import validator from '../common/middlewares/validator.middleware.js';
 import createEventSchema from './validators/createEvent.validator.js';
@@ -21,6 +23,12 @@ const eventRouter = Router();
 
 eventRouter.get('/', getAllEvent);
 
+eventRouter.get(
+  '/user/:id',
+  authMiddleware,
+  checkValidId,
+  getListEventByUserId,
+);
 eventRouter.post(
   '/',
   authMiddleware,
@@ -31,7 +39,13 @@ eventRouter.post(
 );
 
 eventRouter.get('/:id', checkValidId, showById);
-
+eventRouter.get(
+  ':id/users',
+  authMiddleware,
+  adminMiddleware,
+  checkValidId,
+  getListUserByEventId,
+);
 eventRouter.put(
   '/:id',
   authMiddleware,

@@ -14,6 +14,12 @@ export class UserService {
     return this.model.findById(id);
   }
 
+  async findByIds(ids) {
+    return this.model.find({
+      _id: { $in: ids },
+    });
+  }
+
   async findByEmail(email) {
     return this.model.findOne({ email });
   }

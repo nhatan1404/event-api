@@ -14,14 +14,55 @@ export const getAllEvent = async (req, res) => {
   }
 };
 
+export const getListEventByUserId = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await userService.findById(userId);
+
+    if (!user) {
+      return res.notFound({ message: `User with id ${userId} does not exist` });
+    }
+
+    const listEvents = await eventService.findByIds(user.events);
+    return res.success(listEvents);
+  } catch (error) {
+    console.log(error);
+    return res.internal();
+  }
+};
+
+export const getListUserByEventId = async (req, res) => {
+  const eventId = req.params.id;
+  try {
+    const event = await eventService.findById(eventId);
+
+    if (!event) {
+      return res.notFound({
+        message: `Event with id "${eventId}" does not exist`,
+      });
+    }
+
+    const listUsers = await userService.findByIds(event.participantList);
+    return res.success(listUsers);
+  } catch (error) {
+    console.log(error);
+    return res.internal();
+  }
+};
+
 export const showById = async (req, res) => {
   const eventId = req.params.id;
 
   try {
     const event = await eventService.findById(eventId);
+
     if (!event) {
-      return res.notFound({ message: `Event with ${eventId} does not exist` });
+      return res.notFound({
+        message: `Event with id "${eventId}" does not exist`,
+      });
     }
+
     return res.success(event);
   } catch (error) {
     console.log(error);
@@ -68,6 +109,7 @@ export const joinEvent = async (req, res) => {
 
   try {
     const event = await eventService.findById(eventId);
+
     if (event) {
       if (event.participantList.length === event.quantity) {
         return res.error({ message: 'Out of registrations' });
@@ -91,12 +133,12 @@ export const joinEvent = async (req, res) => {
         Bạn đã đăng ký tham gia sự kiện "${event.title}" thành công!<br />
         Xin cảm ơn <br />
         `;
-
         const subject = `Xác nhận đăng ký sự kiện "${event.title}"`;
+
         await sendMail(user.email, '', bodyHtmlEmail, subject);
         return res.success({ message: 'Sign up for the event successfully' });
       }
-      return res.notFound({ message: 'User not found' });
+      return res.notFound({ message: `User with id ${userId} does not exist` });
     }
     return res.notFound({ message: 'Event not found' });
   } catch (error) {
@@ -110,6 +152,7 @@ export const clearAllData = async (req, res) => {
     await eventService.clear();
     return res.success({ message: 'Clear successfully' });
   } catch (error) {
+    console.log(error);
     return res.internal();
   }
 };

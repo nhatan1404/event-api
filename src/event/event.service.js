@@ -13,6 +13,12 @@ export class EventService {
     return this.model.findById(id);
   }
 
+  async findByIds(ids) {
+    return this.model.find({
+      _id: { $in: ids },
+    });
+  }
+
   async store(eventData) {
     const createdEvent = new this.model(eventData);
     return createdEvent.save();

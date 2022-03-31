@@ -10,6 +10,7 @@ import authRouter from './auth/auth.route.js';
 import PassportJWT from './common/strategies/jwt-strategy.js';
 import eventRouter from './event/event.route.js';
 import AllFilterExceptions from './common/filters/all-exeptions.filter.js';
+import userRouter from './user/user.route.js';
 
 const main = () => {
   config();
@@ -57,6 +58,7 @@ const main = () => {
   app.use('/', homeRouter);
   app.use('/auth', authRouter);
   app.use('/event', eventRouter);
+  app.use('/user', userRouter);
 
   const url = process.env.APP_URL;
   const port = process.env.PORT;
