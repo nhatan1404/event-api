@@ -23,8 +23,9 @@ export const EventSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-EventSchema.pre(/^(updateOne|save|findOneAndUpdate)/, function (next) {
-  QRCode.toDataURL(this._id.toString())
+EventSchema.pre('save', function (next) {
+  const data = `${process.env.QR_URL}/${this._id.toString()}`;
+  QRCode.toDataURL(data)
     .then((url) => {
       this.qrImage = url;
       next();

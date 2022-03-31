@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
 import { compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { hash } from 'bcrypt';
 
 export const UserSchema = new mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
+    avatar: { type: String },
+    gender: { type: Boolean, required: true, default: false },
     password: { type: String, required: true },
     address: { type: String, required: true },
     phoneNumber: { type: String },
@@ -39,5 +42,10 @@ UserSchema.methods.generateToken = function () {
     process.env.JWT_SECRET_KEY,
   );
 };
+
+UserSchema.pre(/^(updateOne|save|findOneAndUpdate)/, async function (next) {
+  this.password = await hash(this.password, +process.env.BYCRYPT_SALT);
+  next();
+});
 
 export const userModel = mongoose.model('User', UserSchema);

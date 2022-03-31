@@ -1,5 +1,4 @@
 import { UserService } from '../user/user.service.js';
-import { hash } from 'bcrypt';
 
 const userService = new UserService();
 
@@ -9,28 +8,19 @@ export const handleLogin = async (req, res) => {
     const user = await userService.findByEmail(email);
 
     if (user && (await user.validatePassword(password))) {
-      res
-        .json({
-          accessToken: user.generateToken(),
-        })
-        .status(200);
+      return res.success({ accessToken: user.generateToken() });
     } else {
-      res.json({ message: 'Unauthorized', statusCode: 401 }).status(401);
+      return res.error({ message: 'Email or password is incorrect' });
     }
   } catch (error) {
-    res.json({ message: 'Internal error', statusCode: 500 }).status(500);
+    return res.internal();
   }
 };
 
 export const handleRegister = async (req, res) => {
-  const userData = {
-    ...req.body,
-    password: await hash(req.body.password, 10),
-  };
+  delete req.body.repassword;
 
-  delete userData.repassword;
-
-  const user = await userService.store(userData);
+  const user = await userService.store(req.body);
 
   if (user) return res.json(user).status(200);
   return res.json({ message: 'Error' }).status(400);

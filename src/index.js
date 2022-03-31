@@ -8,16 +8,19 @@ import homeRouter from './home/home.route.js';
 import authRouter from './auth/auth.route.js';
 import PassportJWT from './common/strategies/jwt-strategy.js';
 import eventRouter from './event/event.route.js';
+import AllFilterExceptions from './common/filters/all-exeptions.filter.js';
 
-const main = async () => {
+const main = () => {
   config();
   const app = express();
-  const connectUrl = process.env.MONGO_URL;
 
-  await mongoose.connect(connectUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  mongoose
+    .connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log('Successfully connect to MongoDB.'))
+    .catch((err) => console.error('Connection error', err));
 
   app
     .use(
@@ -36,7 +39,8 @@ const main = async () => {
         extended: true,
       }),
     )
-    .use(express.json());
+    .use(express.json())
+    .use(AllFilterExceptions);
 
   passport.serializeUser(function (user, done) {
     done(null, user);

@@ -10,7 +10,7 @@ export class EventService {
   }
 
   async findById(id) {
-    return this.model.findOne(id);
+    return this.model.findById(id);
   }
 
   async store(eventData) {
@@ -19,10 +19,20 @@ export class EventService {
   }
 
   async update(id, eventData) {
-    return this.model.findByIdAndUpdate(id, eventData);
+    return this.model.findByIdAndUpdate(
+      id,
+      {
+        $set: eventData,
+      },
+      { new: true },
+    );
   }
 
   async destroy(id) {
     return this.model.findOneAndDelete(id);
+  }
+
+  async clear() {
+    return this.model.remove({});
   }
 }
