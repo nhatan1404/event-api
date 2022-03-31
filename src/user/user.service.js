@@ -17,4 +17,12 @@ export class UserService {
   async findByEmail(email) {
     return this.model.findOne({ email });
   }
+
+  async addEventToList(id, eventId) {
+    return this.model.findByIdAndUpdate(
+      id,
+      { $push: { events: { _id: eventId } } },
+      { upsert: true },
+    );
+  }
 }

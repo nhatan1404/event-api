@@ -13,7 +13,7 @@ export const UserSchema = new mongoose.Schema(
     address: { type: String, required: true },
     phoneNumber: { type: String },
     idNumber: { type: String },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     birthday: { type: Date },
     isAdmin: { type: Boolean, default: false },
     events: [
@@ -43,7 +43,7 @@ UserSchema.methods.generateToken = function () {
   );
 };
 
-UserSchema.pre(/^(updateOne|save|findOneAndUpdate)/, async function (next) {
+UserSchema.pre(/^(save|findByIdAndUpdate)/, async function (next) {
   this.password = await hash(this.password, +process.env.BYCRYPT_SALT);
   next();
 });

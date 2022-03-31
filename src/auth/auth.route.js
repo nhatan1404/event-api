@@ -1,13 +1,15 @@
 import { Router } from 'express';
-import authMiddleware from '../common/middlewares/auth.middlware.js';
 import { handleLogin, handleRegister, getProfile } from './auth.controller.js';
-
 import passport from 'passport';
+import validator from '../common/middlewares/validator.middleware.js';
+import loginSchema from './validators/login.validator.js';
+import registerSchema from './validators/register.validator.js';
+
 const authRouter = Router();
 
-authRouter.post('/login', handleLogin);
+authRouter.post('/login', validator(loginSchema), handleLogin);
 
-authRouter.post('/register', handleRegister);
+authRouter.post('/register', validator(registerSchema), handleRegister);
 
 authRouter.get('/profile', passport.authenticate('jwt'), getProfile);
 

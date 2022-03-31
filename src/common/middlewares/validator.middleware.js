@@ -1,29 +1,23 @@
-import { sanitize } from 'class-sanitizer';
-import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
-
-export default function validatorMiddleware(
-  type,
-  skipMissingProperties = false,
-) {
+const validator = (schema) => {
   return (req, res, next) => {
-    const dtoObj = plainToClass(type, req.body);
-
-    validate(dtoObj, { skipMissingProperties }).then((errors) => {
-      if (errors.length > 0) {
-        const errorsMsg = errors.map((err) => ({
-          field: err.property,
-          message:
-            'isEmpty' in err.constraints
-              ? err.constraints.isEmpty
-              : Object.values(err.constraints),
-        }));
-        res.send(errorsMsg).status(400);
-      } else {
-        sanitize(dtoObj);
-        req.body = dtoObj;
+    schema
+      .validateAsync(req.body, {
+        abortEarly: false,
+        allowUnknown: true,
+      })
+      .then(() => {
         next();
-      }
-    });
+      })
+      .catch((error) => {
+        if (error) {
+          const errorMsg = error.details.map((err) => ({
+            field: err.path[0],
+            message: err.message,
+          }));
+          return res.unprocessableEntity(errorMsg);
+        }
+      });
   };
-}
+};
+
+export default validator;

@@ -10,15 +10,15 @@ export const EventSchema = new mongoose.Schema(
     quantity: { type: Number, required: true },
     placeHost: { type: String, required: true },
     description: { type: String },
-    date: { type: Date },
+    date: { type: Date, required: true },
+    timeStart: { type: Date, required: true },
+    timeFinish: { type: Date, required: true },
     participantList: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
       },
     ],
-    timeStart: { type: String },
-    timeFinish: { type: String },
   },
   { timestamps: true },
 );

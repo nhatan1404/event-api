@@ -18,14 +18,26 @@ export const handleLogin = async (req, res) => {
 };
 
 export const handleRegister = async (req, res) => {
+  const existUser = await userService.findByEmail(req.body.email);
+  if (existUser) {
+    return res.unprocessableEntity([
+      {
+        field: 'email',
+        message: 'Email is taken',
+      },
+    ]);
+  }
   delete req.body.repassword;
 
-  const user = await userService.store(req.body);
-
-  if (user) return res.json(user).status(200);
-  return res.json({ message: 'Error' }).status(400);
+  try {
+    const user = await userService.store(req.body);
+    delete user.password;
+    return res.success(user);
+  } catch (error) {
+    return res.internal();
+  }
 };
 
 export const getProfile = async (req, res) => {
-  return res.json(req.user);
+  return res.success(req.user);
 };

@@ -32,6 +32,7 @@ export const createEvent = async (req, res) => {
     const saveEvent = await eventService.store(req.body);
     return res.success(saveEvent);
   } catch (error) {
+    console.log(error);
     return res.internal();
   }
 };
@@ -80,16 +81,15 @@ export const joinEvent = async (req, res) => {
         if (isUserAlreadyRegistered) {
           return res.error({ message: 'Registration already registered' });
         }
-        event.participantList.push({ _id: user._id });
-        user.events.push({ _id: event._id });
-        await event.save();
-        await user.save();
+        await eventService.addUserToList(event._id, user._id);
+        // await userService.addEventToList(user._id, event._id);
         return res.success({ message: 'Sign up for the event successfully' });
       }
       return res.notFound({ message: 'User not found' });
     }
     return res.notFound({ message: 'Event not found' });
   } catch (error) {
+    console.log(error);
     return res.internal();
   }
 };

@@ -9,14 +9,58 @@ import {
   joinEvent,
   clearAllData,
 } from './event.controller.js';
+import validator from '../common/middlewares/validator.middleware.js';
+import createEventSchema from './validators/createEvent.validator.js';
+import updateEventSchema from './validators/updateEvent.validator.js';
+import joinSchema from './validators/joinEvent.validator.js';
+import authMiddleware from '../common/middlewares/auth.middleware.js';
+import adminMiddleware from '../common/middlewares/admin.middleware.js';
 
 const eventRouter = Router();
+
 eventRouter.get('/', getAllEvent);
-eventRouter.post('/', createEvent);
+
+eventRouter.post(
+  '/',
+  authMiddleware,
+  adminMiddleware,
+  validator(createEventSchema),
+  createEvent,
+);
+
+eventRouter.get(
+  '/:id',
+  authMiddleware,
+  adminMiddleware,
+  checkValidId,
+  showById,
+);
+
+eventRouter.put(
+  '/:id',
+  authMiddleware,
+  adminMiddleware,
+  validator(updateEventSchema),
+  checkValidId,
+  updateEvent,
+);
+
+eventRouter.put(
+  '/join/:id',
+  authMiddleware,
+  checkValidId,
+  validator(joinSchema),
+  joinEvent,
+);
+
+eventRouter.delete(
+  '/:id',
+  authMiddleware,
+  adminMiddleware,
+  checkValidId,
+  deleteEvent,
+);
+
 eventRouter.get('/clear', clearAllData);
-eventRouter.get('/:id', checkValidId, showById);
-eventRouter.put('/:id', checkValidId, updateEvent);
-eventRouter.put('/join/:id', checkValidId, joinEvent);
-eventRouter.delete('/:id', checkValidId, deleteEvent);
 
 export default eventRouter;

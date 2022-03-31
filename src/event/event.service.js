@@ -28,6 +28,14 @@ export class EventService {
     );
   }
 
+  async addUserToList(id, userId) {
+    return this.model.findByIdAndUpdate(
+      id,
+      { $push: { participantList: { _id: userId } } },
+      { upsert: true },
+    );
+  }
+
   async destroy(id) {
     return this.model.findOneAndDelete(id);
   }

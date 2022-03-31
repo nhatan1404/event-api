@@ -14,13 +14,11 @@ const AllFilterExceptions = (req, res, next) => {
     statusCode = 400,
     message = 'Bad Request',
   ) {
-    return res
-      .json({
-        errors,
-        statusCode,
-        message,
-      })
-      .status(statusCode);
+    return res.status(statusCode).json({
+      errors,
+      statusCode,
+      message,
+    });
   };
 
   res.notFound = function (
@@ -28,11 +26,11 @@ const AllFilterExceptions = (req, res, next) => {
     statusCode = 404,
     message = 'Not Found',
   ) {
-    return res.error({ errors, statusCode, message }).status(statusCode);
+    return res.status(statusCode).json({ errors, statusCode, message });
   };
 
   res.noContent = function (statusCode = 204, message = 'Not Content') {
-    return res.error({ statusCode, message }).status(statusCode);
+    return res.status(statusCode).json({ statusCode, message });
   };
 
   res.unprocessableEntity = function (
@@ -40,7 +38,7 @@ const AllFilterExceptions = (req, res, next) => {
     statusCode = 422,
     message = 'Unprocessable Entity',
   ) {
-    return res.error({ errors, statusCode, message }).status(statusCode);
+    return res.status(statusCode).json({ errors, statusCode, message });
   };
 
   res.forbidden = function (
@@ -48,7 +46,7 @@ const AllFilterExceptions = (req, res, next) => {
     statusCode = 403,
     message = 'Forbidden',
   ) {
-    return res.error({ errors, statusCode, message }).status(statusCode);
+    return res.status(statusCode).json({ errors, statusCode, message });
   };
 
   res.unauthorized = function (
@@ -56,7 +54,7 @@ const AllFilterExceptions = (req, res, next) => {
     statusCode = 401,
     message = 'Unauthorized',
   ) {
-    return res.error({ errors, statusCode, message }).status(statusCode);
+    return res.status(statusCode).json({ errors, statusCode, message });
   };
 
   res.internal = function (
@@ -66,7 +64,7 @@ const AllFilterExceptions = (req, res, next) => {
     statusCode = 500,
     message = 'Internal server error',
   ) {
-    return res.error({ errors, statusCode, message }).status(statusCode);
+    return res.status(statusCode).json({ errors, statusCode, message });
   };
 
   next();
