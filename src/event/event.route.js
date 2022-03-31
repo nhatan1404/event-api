@@ -15,6 +15,7 @@ import updateEventSchema from './validators/updateEvent.validator.js';
 import joinSchema from './validators/joinEvent.validator.js';
 import authMiddleware from '../common/middlewares/auth.middleware.js';
 import adminMiddleware from '../common/middlewares/admin.middleware.js';
+import uploadMiddleware from '../common/middlewares/upload.middleware.js';
 
 const eventRouter = Router();
 
@@ -25,14 +26,11 @@ eventRouter.post(
   authMiddleware,
   adminMiddleware,
   validator(createEventSchema),
+  uploadMiddleware.single('image'),
   createEvent,
 );
 
-eventRouter.get(
-  '/:id',
-  checkValidId,
-  showById,
-);
+eventRouter.get('/:id', checkValidId, showById);
 
 eventRouter.put(
   '/:id',

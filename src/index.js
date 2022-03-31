@@ -32,17 +32,17 @@ const main = () => {
         cookie: { secure: false },
       }),
     )
+    .use(cors())
     .use(passport.initialize())
     .use(passport.session())
+    .use(express.json())
     .use(bodyParser.json())
     .use(
       bodyParser.urlencoded({
         extended: true,
       }),
     )
-    .use(express.json())
-    .use(AllFilterExceptions)
-    .use(cors());
+    .use(AllFilterExceptions);
 
   passport.serializeUser(function (user, done) {
     done(null, user);

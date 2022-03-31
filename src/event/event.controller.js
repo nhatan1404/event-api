@@ -1,5 +1,6 @@
 import { EventService } from './event.service.js';
 import { UserService } from '../user/user.service.js';
+import sendMail from '../common/utils/sendMail.util.js';
 
 const eventService = new EventService();
 const userService = new UserService();
@@ -23,6 +24,7 @@ export const showById = async (req, res) => {
     }
     return res.success(event);
   } catch (error) {
+    console.log(error);
     return res.internal();
   }
 };
@@ -82,7 +84,16 @@ export const joinEvent = async (req, res) => {
           return res.error({ message: 'Registration already registered' });
         }
         await eventService.addUserToList(event._id, user._id);
-        // await userService.addEventToList(user._id, event._id);
+        await userService.addEventToList(user._id, event._id);
+
+        const bodyHtmlEmail = `
+        Xin chào, <strong>${user.firstName}</strong>.<br />
+        Bạn đã đăng ký tham gia sự kiện "${event.title}" thành công!<br />
+        Xin cảm ơn <br />
+        `;
+
+        const subject = `Xác nhận đăng ký sự kiện "${event.title}"`;
+        await sendMail(user.email, '', bodyHtmlEmail, subject);
         return res.success({ message: 'Sign up for the event successfully' });
       }
       return res.notFound({ message: 'User not found' });
