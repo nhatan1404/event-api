@@ -10,7 +10,9 @@ const AllFilterExceptions = (req, res, next) => {
   };
 
   res.error = function (
-    errors = {},
+    errors = {
+      message: 'Bad Request',
+    },
     statusCode = 400,
     message = 'Bad Request',
   ) {
@@ -22,7 +24,9 @@ const AllFilterExceptions = (req, res, next) => {
   };
 
   res.notFound = function (
-    errors = {},
+    errors = {
+      message: 'Not Found',
+    },
     statusCode = 404,
     message = 'Not Found',
   ) {
@@ -34,7 +38,9 @@ const AllFilterExceptions = (req, res, next) => {
   };
 
   res.unprocessableEntity = function (
-    errors = {},
+    errors = {
+      message: 'Unprocessable Entity',
+    },
     statusCode = 422,
     message = 'Unprocessable Entity',
   ) {
@@ -42,7 +48,9 @@ const AllFilterExceptions = (req, res, next) => {
   };
 
   res.forbidden = function (
-    errors = {},
+    errors = {
+      message: 'Access denied',
+    },
     statusCode = 403,
     message = 'Forbidden',
   ) {
@@ -50,7 +58,9 @@ const AllFilterExceptions = (req, res, next) => {
   };
 
   res.unauthorized = function (
-    errors = {},
+    errors = {
+      message: 'Unauthorized',
+    },
     statusCode = 401,
     message = 'Unauthorized',
   ) {

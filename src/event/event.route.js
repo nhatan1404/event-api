@@ -30,8 +30,6 @@ eventRouter.post(
 
 eventRouter.get(
   '/:id',
-  authMiddleware,
-  adminMiddleware,
   checkValidId,
   showById,
 );
