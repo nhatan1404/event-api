@@ -75,7 +75,7 @@ export const showById = async (req, res) => {
 export const createEvent = async (req, res) => {
   try {
     uploadMiddleware.single('image')(req, res, (err) => {
-      return res.error(err.message);
+      if (err) return res.error(err);
     });
 
     const image = req.file;
@@ -104,7 +104,7 @@ export const updateEvent = async (req, res) => {
 
   try {
     uploadMiddleware.single('image')(req, res, (err) => {
-      return res.error(err.message);
+      if (err) return res.error(err);
     });
 
     const image = req.file;
