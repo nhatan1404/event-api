@@ -40,7 +40,7 @@ eventRouter.post(
 );
 
 eventRouter.get(
-  ':id/users',
+  '/:id/users',
   authMiddleware,
   adminMiddleware,
   checkValidId,
