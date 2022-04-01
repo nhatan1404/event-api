@@ -54,6 +54,7 @@ export const showById = async (req, res) => {
 };
 
 export const createEvent = async (req, res) => {
+  let data = req.body;
   try {
     uploadMiddleware.single('image')(req, res, (err) => {
       if (err) return res.error(err);
@@ -68,10 +69,14 @@ export const createEvent = async (req, res) => {
     }
 
     if (image) {
-      req.body.image = image.path;
+      data = {
+        ...data,
+        image: image.path,
+      };
     }
 
-    const saveEvent = await eventService.store(req.body);
+    console.log(data);
+    const saveEvent = await eventService.store(data);
     return res.success(saveEvent);
   } catch (error) {
     console.log(error);
@@ -80,6 +85,7 @@ export const createEvent = async (req, res) => {
 };
 
 export const updateEvent = async (req, res) => {
+  let data = req.body;
   const eventId = req.params.id;
   let oldImage = '';
 
@@ -99,10 +105,13 @@ export const updateEvent = async (req, res) => {
     if (image) {
       const event = await eventService.findById(eventId);
       oldImage = event.image;
-      req.body.image = image.path;
+      data = {
+        ...data,
+        image: image.path,
+      };
     }
 
-    const updateEvent = await eventService.update(eventId, req.body);
+    const updateEvent = await eventService.update(eventId, data);
     return res.success(updateEvent);
   } catch (error) {
     console.log(error);
