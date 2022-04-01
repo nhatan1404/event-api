@@ -40,7 +40,7 @@ const main = () => {
     // .use(bodyParser.json())
     .use(
       bodyParser.urlencoded({
-        extended: false,
+        extended: true,
       }),
     )
     .use(AllFilterExceptions);
