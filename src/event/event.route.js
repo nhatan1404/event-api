@@ -11,13 +11,15 @@ import {
   getListEventByUserId,
   getListUserByEventId,
 } from './event.controller.js';
-import validator from '../common/middlewares/validator.middleware.js';
+import validatorMiddleware from '../common/middlewares/validator.middleware.js';
 import createEventSchema from './validators/createEvent.validator.js';
 import updateEventSchema from './validators/updateEvent.validator.js';
 import joinSchema from './validators/joinEvent.validator.js';
 import authMiddleware from '../common/middlewares/auth.middleware.js';
 import adminMiddleware from '../common/middlewares/admin.middleware.js';
 import uploadMiddleware from '../common/middlewares/upload.middleware.js';
+import { UserService } from '../user/user.service.js';
+import { EventService } from './event.service.js';
 
 const eventRouter = Router();
 
@@ -26,7 +28,7 @@ eventRouter.get('/', getAllEvent);
 eventRouter.get(
   '/user/:id',
   authMiddleware,
-  checkValidId,
+  checkValidId(UserService),
   getListEventByUserId,
 );
 
@@ -34,7 +36,7 @@ eventRouter.post(
   '/',
   authMiddleware,
   adminMiddleware,
-  validator(createEventSchema),
+  validatorMiddleware(createEventSchema),
   uploadMiddleware.single('image'),
   createEvent,
 );
@@ -43,25 +45,25 @@ eventRouter.get(
   '/:id/users',
   authMiddleware,
   adminMiddleware,
-  checkValidId,
+  checkValidId(EventService),
   getListUserByEventId,
 );
 
-eventRouter.get('/:id', checkValidId, showById);
+eventRouter.get('/:id', checkValidId(EventService), showById);
 eventRouter.put(
   '/:id',
   authMiddleware,
   adminMiddleware,
-  validator(updateEventSchema),
-  checkValidId,
+  validatorMiddleware(updateEventSchema),
+  checkValidId(EventService),
   updateEvent,
 );
 
 eventRouter.put(
   '/join/:id',
   authMiddleware,
-  checkValidId,
-  validator(joinSchema),
+  checkValidId(EventService),
+  validatorMiddleware(joinSchema),
   joinEvent,
 );
 
@@ -69,7 +71,7 @@ eventRouter.delete(
   '/:id',
   authMiddleware,
   adminMiddleware,
-  checkValidId,
+  checkValidId(EventService),
   deleteEvent,
 );
 

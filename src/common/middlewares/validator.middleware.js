@@ -1,4 +1,4 @@
-const validator = (schema) => {
+const validatorMiddleware = (schema) => {
   return (req, res, next) => {
     schema
       .validateAsync(req.body, {
@@ -20,4 +20,4 @@ const validator = (schema) => {
   };
 };
 
-export default validator;
+export default validatorMiddleware;

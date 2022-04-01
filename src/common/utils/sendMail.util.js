@@ -24,6 +24,4 @@ export default async function sendMail(
     subject,
     html,
   });
-
-  // console.log('Message sent: %s', info.messageId);
 }

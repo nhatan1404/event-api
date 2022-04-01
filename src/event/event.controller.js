@@ -21,11 +21,6 @@ export const getListEventByUserId = async (req, res) => {
 
   try {
     const user = await userService.findById(userId);
-
-    if (!user) {
-      return res.notFound({ message: `User with id ${userId} does not exist` });
-    }
-
     const listEvents = await eventService.findByIds(user.events);
     return res.success(listEvents);
   } catch (error) {
@@ -38,13 +33,6 @@ export const getListUserByEventId = async (req, res) => {
   const eventId = req.params.id;
   try {
     const event = await eventService.findById(eventId);
-
-    if (!event) {
-      return res.notFound({
-        message: `Event with id "${eventId}" does not exist`,
-      });
-    }
-
     const listUsers = await userService.findByIds(event.participantList);
     return res.success(listUsers);
   } catch (error) {
@@ -58,13 +46,6 @@ export const showById = async (req, res) => {
 
   try {
     const event = await eventService.findById(eventId);
-
-    if (!event) {
-      return res.notFound({
-        message: `Event with id "${eventId}" does not exist`,
-      });
-    }
-
     return res.success(event);
   } catch (error) {
     console.log(error);
@@ -154,37 +135,34 @@ export const joinEvent = async (req, res) => {
   try {
     const event = await eventService.findById(eventId);
 
-    if (event) {
-      if (event.participantList.length === event.quantity) {
-        return res.error({ message: 'Out of registrations' });
+    if (event.participantList.length === event.quantity) {
+      return res.error({ message: 'Out of registrations' });
+    }
+
+    const user = await userService.findById(userId);
+
+    if (user) {
+      const isUserAlreadyRegistered = event.participantList.find(
+        (par) => par._id.toString() === user._id.toString(),
+      );
+
+      if (isUserAlreadyRegistered) {
+        return res.error({ message: 'Registration already registered' });
       }
+      await eventService.addUserToList(event._id, user._id);
+      await userService.addEventToList(user._id, event._id);
 
-      const user = await userService.findById(userId);
-
-      if (user) {
-        const isUserAlreadyRegistered = event.participantList.find(
-          (par) => par._id.toString() === user._id.toString(),
-        );
-
-        if (isUserAlreadyRegistered) {
-          return res.error({ message: 'Registration already registered' });
-        }
-        await eventService.addUserToList(event._id, user._id);
-        await userService.addEventToList(user._id, event._id);
-
-        const bodyHtmlEmail = `
+      const bodyHtmlEmail = `
         Xin chào, <strong>${user.firstName}</strong>.<br />
         Bạn đã đăng ký tham gia sự kiện "${event.title}" thành công!<br />
         Xin cảm ơn <br />
         `;
-        const subject = `Xác nhận đăng ký sự kiện "${event.title}"`;
+      const subject = `Xác nhận đăng ký sự kiện "${event.title}"`;
 
-        await sendMail(user.email, '', bodyHtmlEmail, subject);
-        return res.success({ message: 'Sign up for the event successfully' });
-      }
-      return res.notFound({ message: `User with id ${userId} does not exist` });
+      await sendMail(user.email, '', bodyHtmlEmail, subject);
+      return res.success({ message: 'Sign up for the event successfully' });
     }
-    return res.notFound({ message: 'Event not found' });
+    return res.notFound({ message: `User with id ${userId} does not exist` });
   } catch (error) {
     console.log(error);
     return res.internal();

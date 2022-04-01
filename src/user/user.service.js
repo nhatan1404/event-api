@@ -5,9 +5,23 @@ export class UserService {
     this.model = userModel;
   }
 
+  async findAll() {
+    return this.model.find().sort({ _id: -1 });
+  }
+
   async store(userData) {
     const createdUser = new this.model(userData);
     return createdUser.save();
+  }
+
+  async update(userId, userData) {
+    return this.model.findByIdAndUpdate(
+      userId,
+      {
+        $set: userData,
+      },
+      { new: true },
+    );
   }
 
   async findById(id) {

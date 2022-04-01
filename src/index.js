@@ -66,6 +66,9 @@ const main = () => {
   app.use('/auth', authRouter);
   app.use('/event', eventRouter);
   app.use('/user', userRouter);
+  app.use((req, res, next) => {
+    res.notFound();
+  });
 
   const url = process.env.APP_URL;
   const port = process.env.PORT;
