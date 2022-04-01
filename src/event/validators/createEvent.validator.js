@@ -8,8 +8,8 @@ const createEventSchema = Joi.object({
   placeHost: Joi.string().required(),
   description: Joi.string().optional(),
   date: Joi.date().required(),
-  timeStart: Joi.date().required(),
-  timeFinish: Joi.date().required(),
+  timeStart: Joi.any().required(),
+  timeFinish: Joi.any().required(),
 });
 
 export default createEventSchema;
