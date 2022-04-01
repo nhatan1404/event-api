@@ -36,8 +36,8 @@ eventRouter.post(
   '/',
   authMiddleware,
   adminMiddleware,
-  validatorMiddleware(createEventSchema),
   uploadMiddleware.single('image'),
+  validatorMiddleware(createEventSchema),
   createEvent,
 );
 
@@ -54,6 +54,7 @@ eventRouter.put(
   '/:id',
   authMiddleware,
   adminMiddleware,
+  uploadMiddleware.single('image'),
   validatorMiddleware(updateEventSchema),
   checkValidId(EventService),
   updateEvent,
