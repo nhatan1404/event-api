@@ -1,3 +1,3 @@
 export const showHome = (req, res) => {
-  return res.json({ message: 'Ok' });
+  return res.success({ message: 'Api event' });
 };
