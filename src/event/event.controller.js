@@ -77,7 +77,6 @@ export const createEvent = async (req, res) => {
       };
     }
 
-    console.log(data);
     const saveEvent = await eventService.store(data);
     return res.success(saveEvent);
   } catch (error) {
@@ -92,6 +91,10 @@ export const updateEvent = async (req, res) => {
   let oldImage = '';
 
   try {
+    uploadMiddleware.single('image')(req, res, (err) => {
+      if (err) return res.error(err);
+    });
+
     const image = req.file;
     if (!req.body.image && !image) {
       return res.unprocessableEntity([
