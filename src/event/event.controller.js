@@ -62,7 +62,7 @@ export const createEvent = async (req, res) => {
 
     const image = req.file;
     if (!req.body.image && !image) {
-      return res.error({
+      return res.unprocessableEntity({
         field: 'image',
         message: 'Image is required',
       });
@@ -96,7 +96,7 @@ export const updateEvent = async (req, res) => {
 
     const image = req.file;
     if (!req.body.image && !image) {
-      return res.error({
+      return res.unprocessableEntity({
         field: 'image',
         message: 'Image is required',
       });
