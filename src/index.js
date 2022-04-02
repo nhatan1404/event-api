@@ -37,20 +37,14 @@ const main = () => {
     .use(passport.initialize())
     .use(passport.session())
     .use(express.json())
-    // .use(bodyParser.json())
+    .use(bodyParser.json())
     .use(
       bodyParser.urlencoded({
         extended: true,
       }),
     )
-    .use(AllFilterExceptions);
-
-  app.use(express.json());
-  app.use(
-    express.urlencoded({
-      extended: false,
-    }),
-  );
+    .use(AllFilterExceptions)
+    .use('/', express.static(path.join(__dirname, 'public')));
 
   passport.serializeUser(function (user, done) {
     done(null, user);
