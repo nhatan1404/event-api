@@ -114,6 +114,7 @@ export const updateEvent = async (req, res) => {
       };
     }
 
+    console.log(data);
     const updateEvent = await eventService.update(eventId, data);
     return res.success(updateEvent);
   } catch (error) {
