@@ -92,10 +92,6 @@ export const updateEvent = async (req, res) => {
   let oldImage = '';
 
   try {
-    uploadMiddleware.single('image')(req, res, (err) => {
-      if (err) return res.error(err);
-    });
-
     const image = req.file;
     if (!req.body.image && !image) {
       return res.unprocessableEntity([
