@@ -96,14 +96,14 @@ export const updateEvent = async (req, res) => {
     });
 
     const image = req.file;
-    if (!req.body.image && !image) {
-      return res.unprocessableEntity([
-        {
-          field: 'image',
-          message: 'Image is required',
-        },
-      ]);
-    }
+    // if (!req.body.image && !image) {
+    //   return res.unprocessableEntity([
+    //     {
+    //       field: 'image',
+    //       message: 'Image is required',
+    //     },
+    //   ]);
+    // }
 
     if (image) {
       const event = await eventService.findById(eventId);
