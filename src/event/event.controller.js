@@ -132,9 +132,14 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
   const eventId = req.params.id;
-
   try {
-    await eventService.destroy(eventId);
+    const event = await eventService.findById(eventId);
+    const oldImage = event.image;
+    await event.remove();
+    const isLocalImg = await checkPathExists(oldImage);
+    if (isLocalImg) {
+      await remove(oldImage);
+    }
     return res.noContent();
   } catch (error) {
     console.log(error);

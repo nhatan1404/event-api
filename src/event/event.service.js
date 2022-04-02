@@ -43,7 +43,11 @@ export class EventService {
   }
 
   async destroy(id) {
-    return this.model.findOneAndDelete(id);
+    const event = await this.findById(id);
+    if (event) {
+      return event.remove();
+    }
+    return null;
   }
 
   async clear() {
