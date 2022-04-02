@@ -40,6 +40,7 @@ userRouter.put(
   validatorMiddleware(updateUserSchema),
   updateUser,
 );
+
 userRouter.delete(
   '/:id',
   authMiddleware,

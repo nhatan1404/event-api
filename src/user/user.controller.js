@@ -57,7 +57,17 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const deleteUser = async (req, res) => {};
+export const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await userService.findById(userId);
+    await user.remove();
+    return res.noContent();
+  } catch (error) {
+    console.log(error);
+    return res.internal();
+  }
+};
 
 export const getListEvent = async (req, res) => {
   const user = await userService.findById(req.user._id);
