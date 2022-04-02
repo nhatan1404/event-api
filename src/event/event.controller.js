@@ -2,7 +2,7 @@ import { EventService } from './event.service.js';
 import { UserService } from '../user/user.service.js';
 import sendMail from '../common/utils/sendMail.util.js';
 import uploadMiddleware from '../common/middlewares/upload.middleware.js';
-import { remove } from '../common/utils/file.util.js';
+import { remove, checkPathExists } from '../common/utils/file.util.js';
 
 const eventService = new EventService();
 const userService = new UserService();
