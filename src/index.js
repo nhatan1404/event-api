@@ -11,10 +11,12 @@ import PassportJWT from './common/strategies/jwt-strategy.js';
 import eventRouter from './event/event.route.js';
 import AllFilterExceptions from './common/filters/all-exeptions.filter.js';
 import userRouter from './user/user.route.js';
+import path from 'path';
 
 const main = () => {
   config();
   const app = express();
+  const __dirname = path.resolve();
 
   mongoose
     .connect(process.env.MONGO_URL, {
@@ -44,7 +46,7 @@ const main = () => {
       }),
     )
     .use(AllFilterExceptions)
-    .use('/', express.static(path.join(__dirname, 'public')));
+    .use('/public', express.static(path.join(__dirname, 'public')));
 
   passport.serializeUser(function (user, done) {
     done(null, user);
