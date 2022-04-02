@@ -32,7 +32,10 @@ export const handleRegister = async (req, res) => {
   try {
     const user = await userService.store(req.body);
     delete user.password;
-    return res.success(user);
+    return res.success({
+      user,
+      accessToken: user.generateToken(),
+    });
   } catch (error) {
     return res.internal();
   }

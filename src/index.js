@@ -46,7 +46,7 @@ const main = () => {
       }),
     )
     .use(AllFilterExceptions)
-    .use('/public', express.static(path.join(__dirname, 'public')));
+  .use('/public', express.static(path.join(__dirname, 'public')));
 
   passport.serializeUser(function (user, done) {
     done(null, user);
