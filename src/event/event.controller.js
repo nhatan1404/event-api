@@ -134,9 +134,10 @@ export const deleteEvent = async (req, res) => {
   const eventId = req.params.id;
 
   try {
-    await destroy(eventId);
+    await eventService.destroy(eventId);
     return res.noContent();
   } catch (error) {
+    console.log(error);
     return res.internal();
   }
 };
