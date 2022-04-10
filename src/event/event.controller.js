@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service.js';
 import sendMail from '../common/utils/sendMail.util.js';
 import uploadMiddleware from '../common/middlewares/upload.middleware.js';
 import { remove, checkPathExists } from '../common/utils/file.util.js';
+import sendSMS from '../common/utils/sendSms.util.js';
 
 const eventService = new EventService();
 const userService = new UserService();
@@ -174,11 +175,21 @@ export const joinEvent = async (req, res) => {
       const bodyHtmlEmail = `
         Xin chào, <strong>${user.firstName}</strong>.<br />
         Bạn đã đăng ký tham gia sự kiện "${event.title}" thành công!<br />
-        Xin cảm ơn <br />
+        Xin cảm ơn! <br />
         `;
       const subject = `Xác nhận đăng ký sự kiện "${event.title}"`;
 
       await sendMail(user.email, '', bodyHtmlEmail, subject);
+      if (user.phoneNumber) {
+        await sendSMS(
+          user.phoneNumber,
+          `
+        Xin chào, ${user.firstName}
+        Bạn đã đăng ký tham gia sự kiện "${event.title}" thành công!
+        Xin cảm ơn!
+        `,
+        );
+      }
       return res.success({ message: 'Sign up for the event successfully' });
     }
     return res.notFound({ message: `User with id ${userId} does not exist` });

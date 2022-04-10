@@ -1,3 +1,4 @@
+import { formatPhoneNumber } from '../common/utils/phone.util.js';
 import { UserService } from '../user/user.service.js';
 
 const userService = new UserService();
@@ -28,6 +29,10 @@ export const handleRegister = async (req, res) => {
     ]);
   }
   delete req.body.repassword;
+
+  if (req.body.phoneNumber) {
+    req.body.phoneNumber = formatPhoneNumber(req.body.phoneNumber);
+  }
 
   try {
     const user = await userService.store(req.body);

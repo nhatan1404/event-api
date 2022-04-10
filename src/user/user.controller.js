@@ -36,6 +36,10 @@ export const createUser = async (req, res) => {
   }
   delete req.body.repassword;
 
+  if (req.body.phoneNumber) {
+    req.body.phoneNumber = formatPhoneNumber(req.body.phoneNumber);
+  }
+
   try {
     const user = await userService.store(req.body);
     delete user.password;
@@ -47,6 +51,10 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const userId = req.params.id;
+
+  if (req.body.phoneNumber) {
+    req.body.phoneNumber = formatPhoneNumber(req.body.phoneNumber);
+  }
 
   try {
     const updatedUser = await userService.update(userId, req.body);
